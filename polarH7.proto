@@ -1,0 +1,7 @@
+syntax = "proto2";
+package UoB;
+message Test {
+  required int64 timestamp = 1;
+  required int32 HR  = 2;
+  required int32 RR  = 3;
+}

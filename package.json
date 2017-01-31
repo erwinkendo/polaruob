@@ -1,0 +1,17 @@
+{
+  "name": "polaruob",
+  "version": "1.0.0",
+  "description": "Logger for polar H7 and the driver logging system made by Erwin Lopez.",
+  "main": "main.js",
+  "dependencies": {
+    "moment": "^2.14.1",
+    "noble-device": "^1.4.1",
+    "protocol-buffers": "^3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Erwin Lopez",
+  "license": "ISC"
+}
