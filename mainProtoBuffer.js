@@ -1,7 +1,11 @@
 var moment = require('moment');
 var fs = require("fs");
 var NobleDevice = require('noble-device');
+var protobuf = require('protocol-buffers')
 var socket = require('net').Socket();
+
+
+var messages = protobuf(fs.readFileSync('polarH7.proto'))
 
 var tempName = [];
 tempName[0] = moment().format('X');
@@ -106,12 +110,13 @@ polarH7.discoverAll(function(device) {
 	
 	var timeBuff = Date.now();
 	
-	var buf = {
+	var buf = messages.Test.encode({
 		HR: data.HR,
 		RR: data.RR,
 		timestamp: timeBuff,
-	};
-    socket.write(JSON.stringify(buf));
+	})
+
+    socket.write(buf);
 	
 	// Log to file
 	tempHeader[0] = timeBuff;
