@@ -24,7 +24,7 @@ while true
     disp(parsedData.RR);
     
     disp('timestamp');
-    disp(datetime( parsedData.timestamp, 'ConvertFrom', 'posixtime' ));
+    disp(datetime( parsedData.timestamp / 1000, 'ConvertFrom', 'posixtime' ));
     
 end
 
