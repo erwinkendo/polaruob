@@ -19,6 +19,10 @@ When ready, just run on your cmd.
 npm install
 ```
 
+## Citation
+Use the Zenodo-enabled service to generate a citation using your favourite style [![DOI](https://zenodo.org/badge/80522752.svg)](https://zenodo.org/badge/latestdoi/80522752)
+
+
 ## License
 
 Please feel free to share and modify it as you please, but remember to acknowledge our hard work :). Happy coding!
