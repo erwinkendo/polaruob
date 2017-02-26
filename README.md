@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/80522752.svg)](https://zenodo.org/badge/latestdoi/80522752)
 # Polar H7 data-logger
 Logger for polar H7 and the driver logging system made by Erwin Lopez.
 
