@@ -71,6 +71,7 @@ polarH7.discoverAll(function(device) {
     console.log('disconnected!');
 	console.log(polarH7.state);
 	
+	// Uncomment to enable reconnecting  
 	//polarH7.startScanning();
     //process.exit(0);
   });
