@@ -1,0 +1,21 @@
+services:
+  polar-logger:
+    build: .
+    image: polaruob-ble:latest
+    init: true
+    restart: unless-stopped
+    # Talk to the HOST's bluetoothd over its system D-Bus socket.
+    # No host networking, no extra capabilities, no privileged mode.
+    volumes:
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+      - ./data:/data
+    environment:
+      POLAR_ID: ""            # e.g. "00:22:D0:B9:8A:CB"; empty = match by name
+      POLAR_NAME: "Polar"
+      # BLE_ADAPTER: "hci0"
+      # TCP_HOST: "host.docker.internal"
+      # TCP_PORT: "9000"
+    # extra_hosts: ["host.docker.internal:host-gateway"]   # needed if TCP_HOST points at the host
+    # Only if the host's AppArmor blocks D-Bus calls (see README):
+    security_opt:
+      - apparmor:unconfined

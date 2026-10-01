@@ -1,17 +1,16 @@
 {
-  "name": "polaruob",
-  "version": "1.0.0",
-  "description": "Logger for polar H7 and the driver logging system made by Erwin Lopez.",
-  "main": "main.js",
-  "dependencies": {
-    "moment": "^2.14.1",
-    "noble-device": "^1.4.1",
-    "protocol-buffers": "^3.2.1"
-  },
-  "devDependencies": {},
+  "name": "polaruob-ble",
+  "version": "2.0.0",
+  "description": "Polar H7 / BLE heart-rate logger to CSV using node-ble (BlueZ D-Bus).",
+  "main": "polar-logger-ble.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node polar-logger-ble.js",
+    "test": "node test-parser.js",
+    "server": "node tcp-test-server.js"
   },
+  "engines": { "node": ">=20" },
+  "dependencies": { "node-ble": "^1.13.0" },
+  "optionalDependencies": { "protocol-buffers": "^5.0.0" },
   "author": "Erwin Lopez",
-  "license": "ISC"
+  "license": "Apache-2.0"
 }
