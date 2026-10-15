@@ -11,10 +11,12 @@
  *   OUT_DIR        Folder for CSV files (default ./data).
  *   TCP_HOST / TCP_PORT / TCP_FORMAT   Optional streaming, same as the noble version.
  *   RECONNECT      "0" to exit when the strap disconnects (default: reconnect).
+ *   ROS 2 options: see ros2-publisher.js (topics /polar/heart_rate and /polar/connected).
  */
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
+const { startRos } = require('./ros2-publisher');
 
 // BlueZ exposes full 128-bit UUIDs
 const HR_SERVICE = '0000180d-0000-1000-8000-00805f9b34fb';
@@ -36,6 +38,8 @@ const cfg = {
   tcpFormat: (process.env.TCP_FORMAT || 'json').toLowerCase(),
   reconnect: process.env.RECONNECT !== '0',
 };
+
+let ros = { publish() {}, setConnected() {}, shutdown() {} };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -130,18 +134,21 @@ async function runSession(device) {
   const hrChar = await service.getCharacteristic(HR_MEASUREMENT);
 
   openCsv(mac.replace(/:/g, '').toLowerCase());
+  ros.setConnected(true);
   hrChar.on('valuechanged', (data) => {
     const ts = Date.now();
     const m = parseHeartRate(data);
     console.log(`HR ${m.hr} bpm  RR ${m.rr.map((r) => (r * 1000 / 1024).toFixed(0)).join(' ') || '-'} ms`);
     writeRows(ts, m);
     sendTcp(ts, m);
+    ros.publish(m, mac);
   });
   await hrChar.startNotifications();
   console.log('Subscribed to heart-rate notifications');
 
   await disconnected;
   hrChar.removeAllListeners('valuechanged');
+  ros.setConnected(false);
   console.log('Strap disconnected');
 }
 
@@ -152,6 +159,7 @@ async function main() {
       'Is dbus running on the host? In Docker, mount -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket');
   }
   startTcp();
+  ros = await startRos();
   const { createBluetooth } = require('node-ble');
   const { bluetooth, destroy } = createBluetooth();
   const adapter = cfg.adapter ? await bluetooth.getAdapter(cfg.adapter) : await bluetooth.defaultAdapter();
@@ -164,6 +172,7 @@ async function main() {
     console.log('Shutting down...');
     closeCsv();
     if (socket) socket.destroy();
+    ros.shutdown();
     setTimeout(() => process.exit(0), 1500); // hard stop if BlueZ is slow
     try { if (current) await current.disconnect(); } catch (_) { /* already gone */ }
     try { await adapter.stopDiscovery(); } catch (_) { /* not discovering */ }
@@ -185,9 +194,11 @@ async function main() {
     }
     current = null;
     closeCsv();
+    ros.setConnected(false);
     if (!cfg.reconnect) break;
     await sleep(2000);
   }
+  ros.shutdown();
   destroy();
 }
 

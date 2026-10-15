@@ -1,17 +1,21 @@
 services:
-  polar-logger:
+  polar-ros2:
     build: .
-    image: polaruob-ble:latest
+    image: polaruob-ros2:latest
     init: true
     restart: unless-stopped
+    network_mode: host          # DDS discovery with the rest of your ROS 2 graph
     # Talk to the HOST's bluetoothd over its system D-Bus socket.
-    # No host networking, no extra capabilities, no privileged mode.
     volumes:
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
       - ./data:/data
     environment:
+      ROS_DOMAIN_ID: "0"
+      FASTDDS_BUILTIN_TRANSPORTS: "UDPv4"
       POLAR_ID: ""            # e.g. "00:22:D0:B9:8A:CB"; empty = match by name
       POLAR_NAME: "Polar"
+      POLAR_NAMESPACE: "/polar"
+      POLAR_FRAME_ID: "polar_h7"
       # BLE_ADAPTER: "hci0"
       # TCP_HOST: "host.docker.internal"
       # TCP_PORT: "9000"

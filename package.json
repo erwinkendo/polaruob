@@ -1,15 +1,18 @@
 {
-  "name": "polaruob-ble",
-  "version": "2.0.0",
-  "description": "Polar H7 / BLE heart-rate logger to CSV using node-ble (BlueZ D-Bus).",
+  "name": "polaruob-ros2",
+  "version": "3.0.0",
+  "description": "Polar H7 / BLE heart-rate logger to CSV and ROS 2 topics (node-ble + rclnodejs).",
   "main": "polar-logger-ble.js",
   "scripts": {
     "start": "node polar-logger-ble.js",
-    "test": "node test-parser.js",
+    "test": "node test-parser.js && node test-ros2.js",
     "server": "node tcp-test-server.js"
   },
-  "engines": { "node": ">=20" },
-  "dependencies": { "node-ble": "^1.13.0" },
+  "engines": { "node": ">=20.20.2" },
+  "dependencies": {
+    "node-ble": "^1.13.0",
+    "rclnodejs": "^2.3.0"
+  },
   "optionalDependencies": { "protocol-buffers": "^5.0.0" },
   "author": "Erwin Lopez",
   "license": "Apache-2.0"
